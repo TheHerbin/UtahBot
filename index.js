@@ -56,7 +56,7 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) {
         return
     }
-    const triggerWords = ["Fixed", "issue", "The Isle", "TheIsle", "Omni", "Raptor", "Herrera", "Rex", "Diablo", "Deino", "Pounce", "Croc", "Carno", "Stego", "Hypsi", "organs", "Ptera", "Tenon", "Troodon", "Cera", "Carnivore", "Herbivore", "Beipi"]
+    const triggerWords = ["fixed", "issue", "the isle", "theisle", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
     /*if(message.content === "test"){
 
         message.reply("Voici un test bien réussi !")
@@ -64,7 +64,7 @@ client.on('messageCreate', async (message) => {
     let shouldBeTriggered = false;
 
     triggerWords.forEach(function (element) {
-        if (message.content.includes(element)) {
+        if (message.content.toLowerCase().includes(element)) {
             shouldBeTriggered = true;
         }
     });
