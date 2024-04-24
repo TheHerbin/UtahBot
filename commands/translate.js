@@ -15,7 +15,7 @@ module.exports = {
             console.log("executing command : Translate ")
 
             translatedText = await functions.translater(interaction.options.getString("text"))
-            console.log(translatedText)
+            
             await interaction.reply({
                 content: translatedText
             });
