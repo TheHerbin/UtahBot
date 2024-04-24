@@ -5,7 +5,7 @@ const { Client, Events, GatewayIntentBits, Collection, userMention, ButtonBuilde
 const fs = require("node:fs");
 const path = require("node:path");
 require("./commands/translate.js")
-
+var functions = require('./functions');
 
 const client = new Client({
     intents: [
@@ -56,7 +56,7 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) {
         return
     }
-    const triggerWords = ["Fixed", "issue", "The Isle", "TheIsle", "Omni", "Raptor", "Herrera", "Rex", "Diablo", "Deino", "Pounce", "Croc", "Carno", "Stego", "Hypsi", "organs", "Ptera", "Tenon", "Troodon", "Cera"]
+    const triggerWords = ["Fixed", "issue", "The Isle", "TheIsle", "Omni", "Raptor", "Herrera", "Rex", "Diablo", "Deino", "Pounce", "Croc", "Carno", "Stego", "Hypsi", "organs", "Ptera", "Tenon", "Troodon", "Cera", "Carnivore", "Herbivore", "Beipi"]
     /*if(message.content === "test"){
 
         message.reply("Voici un test bien réussi !")
@@ -111,7 +111,7 @@ client.on("interactionCreate", async interaction => {
         const messageReply = messageReplyMap.get(interaction.message.id);
 
         if (customId === 'confirm') {
-            const translatedText = await translate(saidMessage.content);
+            const translatedText = await functions.translater(saidMessage.content);
 
             // Remove the buttons from the original message's reply
             await messageReply.edit({
@@ -129,20 +129,3 @@ client.on("interactionCreate", async interaction => {
 })
 
 client.login(process.env.TOKEN);
-
-async function translate(inputText) {
-    const inputLanguage = "en";
-    const outputLanguage = "fr";
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=${outputLanguage}&dt=t&q=${encodeURI(inputText)}`;
-
-    try {
-        const response = await fetch(url);
-        const json = await response.json();
-        const translatedText = JSON.parse(JSON.stringify(json[0]))[0][0];
-        
-        return translatedText;
-    } catch (error) {
-        console.error(error);
-        throw new Error('Translation failed');
-    }
-}
