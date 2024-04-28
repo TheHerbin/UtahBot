@@ -56,15 +56,29 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) {
         return
     }
-    const triggerWords = ["fixed", "issue", "the isle", "theisle", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
-    /*if(message.content === "test"){
-
-        message.reply("Voici un test bien réussi !")
-    }*/
     let shouldBeTriggered = false;
+    //old theisle related triggerwords
+    //const triggerWords = ["no", "is", "has", "do", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
+    
+    //new generalist trigger words for english : most used words
+    let triggerWords = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
+    "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
+    "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
+    "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
+    "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
+    "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
+    "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
+    "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
+    "back", "after", "use", "two", "how", "our", "work", "first", "well", "way",
+    "even", "new", "want", "because", "any", "these", "give", "day", "most", "us"]
+    
 
+    //putting spaces on each word so It only triggers when the word is full
+    triggerWords = triggerWords.map(str => ` ${str} `);
+
+    //Checks if there is any occurences.
     triggerWords.forEach(function (element) {
-        if (message.content.toLowerCase().includes(element)) {
+        if (message.content.toLowerCase().replace(/\./g, ' ').includes(element)) {
             shouldBeTriggered = true;
         }
     });
