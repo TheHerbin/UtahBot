@@ -63,7 +63,7 @@ client.on('messageCreate', async (message) => {
     //new generalist trigger words for english : most used words
     let triggerWords = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
     "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
-    "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
+    "this", "his", "by", "from", "they", "we", "say", "her", "she",
     "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
     "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
     "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
