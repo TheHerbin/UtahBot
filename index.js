@@ -70,7 +70,7 @@ client.on('messageCreate', async (message) => {
     "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
     "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
     "back", "after", "use", "two", "how", "our", "work", "first", "well", "way",
-    "even", "new", "want", "because", "any", "these", "give", "day", "most", "us"]
+    "even", "new", "want", "because", "any", "these", "give", "day", "most", "us", "may"]
     
 
     //putting spaces on each word so It only triggers when the word is full
