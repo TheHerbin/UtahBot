@@ -61,7 +61,7 @@ client.on('messageCreate', async (message) => {
     //const triggerWords = ["no", "is", "has", "do", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
     
     //new generalist trigger words for english : most used words
-    let triggerWords = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
+    let triggerWords = ["the", "be", "to", "of", "and", "in", "that", "have", "i",
     "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
     "this", "his", "by", "from", "they", "we", "say", "her", "she",
     "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
