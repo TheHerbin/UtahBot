@@ -18,9 +18,9 @@ module.exports = {
     },*/
 
     translater: async function (inputText) {
-        var splittedInput = inputText.split(".");
+        var splittedInput = inputText.split(/[.!?]/);
         var translatedText = "";
-
+        
         for (const sentence of splittedInput) {
             translatedText += await module.exports.translate(sentence) + "\n";
         }

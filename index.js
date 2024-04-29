@@ -56,15 +56,16 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) {
         return
     }
+
     let shouldBeTriggered = false;
     //old theisle related triggerwords
     //const triggerWords = ["no", "is", "has", "do", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
     
     //new generalist trigger words for english : most used words
-    let triggerWords = ["the", "be", "to", "of", "and", "in", "that", "have", "i",
-    "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
+    let triggerWords = ["the", "be", "to", "of", "and", "in", "that", "have", "i", "what",
+    "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "is",
     "this", "his", "by", "from", "they", "we", "say", "her", "she",
-    "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
+    "or", "an", "will", "my", "one", "all", "would", "there", "their",
     "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
     "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
     "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
@@ -74,15 +75,16 @@ client.on('messageCreate', async (message) => {
     
 
     //putting spaces on each word so It only triggers when the word is full
-    triggerWords = triggerWords.map(str => ` ${str} `);
+    triggerWords = triggerWords.map(word => new RegExp(`\\b${word}\\b`, 'gi'));
 
     //Checks if there is any occurences.
-    triggerWords.forEach(function (element) {
-        if (message.content.toLowerCase().replace(/\./g, ' ').includes(element)) {
+    triggerWords.forEach(function (regex) {
+        
+        if (regex.test(message.content.toLowerCase())) {
+            console.log("Occurrence detected : "+ regex);
             shouldBeTriggered = true;
         }
     });
-
     if (shouldBeTriggered == true) {
         const channel = message.channelId
         saidMessage = message
@@ -125,6 +127,7 @@ client.on("interactionCreate", async interaction => {
         const messageReply = messageReplyMap.get(interaction.message.id);
 
         if (customId === 'confirm') {
+            console.log("confirm button pressed")
             const translatedText = await functions.translater(saidMessage.content);
 
             // Remove the buttons from the original message's reply
@@ -134,6 +137,7 @@ client.on("interactionCreate", async interaction => {
             });
             saidMessage = "";
         } else if (customId === 'cancel') {
+            console.log("Cancelled Translation")
             await messageReply.delete();
             saidMessage = "";
         }
