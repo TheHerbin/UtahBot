@@ -18,14 +18,18 @@ module.exports = {
     },*/
 
     translater: async function (inputText) {
-        var splittedInput = inputText.split(/[.!?]/);
-        var translatedText = "";
-        
-        for (const sentence of splittedInput) {
-            translatedText += await module.exports.translate(sentence) + "\n";
+        if (inputText) {
+            var splittedInput = inputText.split(/[.!?]/);
+            var translatedText = "";
+            
+            for (const sentence of splittedInput) {
+                translatedText += await module.exports.translate(sentence) + "\n";
+            }
+            console.log(translatedText)
+            return translatedText;
+        }else{
+            console.error("Input text is undefined.");
         }
-        console.log(translatedText)
-        return translatedText;
     },
 
     translate: async function(inputText){
