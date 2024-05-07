@@ -66,7 +66,7 @@ client.on('messageCreate', async (message) => {
     "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "is",
     "this", "his", "by", "from", "they", "we", "say", "her", "she",
     "or", "an", "will", "my", "one", "all", "would", "there", "their",
-    "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
+    "so", "up", "out", "if", "about", "who", "get", "which", "go",
     "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
     "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
     "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
