@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
-const { Client, Events, GatewayIntentBits, Collection, userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Collection, userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder, Partials } = require('discord.js');
 const fs = require("node:fs");
 const path = require("node:path");
 require("./commands/translate.js")
@@ -12,8 +12,14 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers
-    ]
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions
+    ],
+    partials: [
+        Partials.Message, 
+        Partials.Channel, 
+        Partials.Reaction
+    ],
 });
 
 //Commands : 
@@ -52,63 +58,40 @@ client.on("ready", () => {
 
 const messageReplyMap = new Map();
 
-client.on('messageCreate', async (message) => {
-    if (message.author.bot) {
-        return
-    }
 
-    let shouldBeTriggered = false;
-    //old theisle related triggerwords
-    //const triggerWords = ["no", "is", "has", "do", "omni", "raptor", "herrera", "rex", "diablo", "deino", "pounce", "croc", "carno", "stego", "hypsi", "organs", "ptera", "tenon", "troodon", "cera", "carnivore", "herbivore", "beipi", "dryo", "galli"]
+//Detecting Reactions to instantiate traductions
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
     
-    //new generalist trigger words for english : most used words
-    let triggerWords = ["the", "be", "to", "of", "and", "in", "that", "have", "i", "what",
-    "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "is",
-    "this", "his", "by", "from", "they", "we", "say", "her", "she",
-    "or", "an", "will", "my", "one", "all", "would", "there", "their",
-    "so", "up", "out", "if", "about", "who", "get", "which", "go",
-    "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
-    "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
-    "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
-    "back", "after", "use", "two", "how", "our", "work", "first", "well", "way",
-    "even", "new", "want", "because", "any", "these", "give", "day", "most", "us", "may"]
-    
+    const reactedMessageContent = reaction.message.content
+    const reactedMessage = reaction.message
+    //console.log(reaction.emoji)
+	// When a reaction is received, check if the structure is partial
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		} catch (error) {
+			console.error('Something went wrong when fetching the message:', error);
+			// Return as `reaction.message.author` may be undefined/null
+			return;
+		}
+	}
 
-    //putting spaces on each word so It only triggers when the word is full
-    triggerWords = triggerWords.map(word => new RegExp(`\\b${word}\\b`, 'gi'));
+	// Now the message has been cached and is fully available
+    //Check for the used Emoji
 
-    //Checks if there is any occurences.
-    triggerWords.forEach(function (regex) {
+    if (reaction.emoji.name == "🇫🇷"){
+        console.log("Flag Francais détecté")
+        //If french flag detected, start the translation
+
+        const translatedText = await functions.translater(reactedMessageContent);
+
+        //Reply to the original message with the translation
+        reactedMessage.reply(":flag_fr: : "+translatedText)
         
-        if (regex.test(message.content.toLowerCase())) {
-            console.log("Occurrence detected : "+ regex);
-            shouldBeTriggered = true;
-        }
-    });
-    if (shouldBeTriggered == true) {
-        const channel = message.channelId
-        saidMessage = message
-        const reply = await message.reply({
-            content: `Veux-tu que je traduise ce texte ?`,
-            components: [
-                new ActionRowBuilder().setComponents(
-                    new ButtonBuilder()
-                        .setCustomId('confirm')
-                        .setLabel('Traduis stp')
-                        .setStyle(ButtonStyle.Primary),
-                    new ButtonBuilder()
-                        .setCustomId('cancel')
-                        .setLabel('Ne pas traduire')
-                        .setStyle(ButtonStyle.Secondary)
-                )
-
-            ]
-        });
-        // Store the message containing the buttons in messageReplyMap
-        messageReplyMap.set(reply.id, reply);
     }
-
-})
+    
+});
 
 client.on("interactionCreate", async interaction => {
     if (interaction.isCommand()) {
