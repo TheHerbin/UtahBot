@@ -61,9 +61,12 @@ const messageReplyMap = new Map();
 
 //Detecting Reactions to instantiate traductions
 client.on(Events.MessageReactionAdd, async (reaction, user) => {
-    
+    console.log(reaction.emoji.name)
     const reactedMessageContent = reaction.message.content
     const reactedMessage = reaction.message
+    let translatedText = "";
+    let baseLangage = "";
+    let targetLangage = "";
     //console.log(reaction.emoji)
 	// When a reaction is received, check if the structure is partial
 	if (reaction.partial) {
@@ -78,17 +81,29 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
 	}
 
 	// Now the message has been cached and is fully available
-    //Check for the used Emoji
+    //Check for the used Emoji with chosen langage
 
-    if (reaction.emoji.name == "🇫🇷"){
-        console.log("Flag Francais détecté")
-        //If french flag detected, start the translation
-
-        const translatedText = await functions.translater(reactedMessageContent);
-
-        //Reply to the original message with the translation
-        reactedMessage.reply(":flag_fr: : "+translatedText)
-        
+    switch (reaction.emoji.name) {
+        case '🇫🇷':
+            console.log("Flag Francais détecté")
+            //If french flag detected, start the translation
+            targetLangage = "fr"
+            inputLanguage = "en";
+            translatedText = await functions.translater(reactedMessageContent, targetLangage, inputLanguage);
+    
+            //Reply to the original message with the translation
+            reactedMessage.reply(":flag_fr: : "+translatedText)
+        break;
+        case '🇬🇧':
+            console.log("Flag Anglais détecté")
+            //If british flag detected, start the translation
+            targetLangage = "en"
+            inputLanguage = "fr"
+            translatedText = await functions.translater(reactedMessageContent, targetLangage, inputLanguage);
+    
+            //Reply to the original message with the translation
+            reactedMessage.reply(":flag_gb: : "+translatedText)
+        break;
     }
     
 });

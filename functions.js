@@ -17,13 +17,14 @@ module.exports = {
         return translatedText
     },*/
 
-    translater: async function (inputText) {
+    translater: async function (inputText, targetLangage, inputLanguage) {
+
         if (inputText) {
             var splittedInput = inputText.split(/[.!?]/);
             var translatedText = "";
             
             for (const sentence of splittedInput) {
-                translatedText += await module.exports.translate(sentence) + "\n";
+                translatedText += await module.exports.translate(sentence, targetLangage, inputLanguage) + "\n";
             }
             console.log(translatedText)
             return translatedText;
@@ -32,10 +33,10 @@ module.exports = {
         }
     },
 
-    translate: async function(inputText){
-        const inputLanguage = "en";
-        const outputLanguage = "fr";
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=${outputLanguage}&dt=t&q=${encodeURI(inputText)}`;
+    translate: async function(inputText, targetLangage, inputLanguage){
+        
+        
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=${targetLangage}&dt=t&q=${encodeURI(inputText)}`;
     
         try {
             const response = await fetch(url);
