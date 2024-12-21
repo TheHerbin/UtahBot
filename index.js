@@ -68,38 +68,34 @@ const messageReplyMap = new Map();
 
 //Detecting Reactions to instantiate traductions
 client.on(Events.MessageReactionAdd, async (reaction, user) => {
-  console.log(reaction.emoji.name);
   const reactedMessageContent = reaction.message.content;
   const reactedMessage = reaction.message;
   let translatedText = "";
-  let baseLangage = "";
+  let inputLanguage = "";
   let targetLangage = "";
-  //console.log(reaction.emoji)
+  let flag = "";
+  let starttranslation = false;
   // When a reaction is received, check if the structure is partial
   if (reaction.partial) {
-    // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+    // If the message this reaction belongs to was removed, the fetching might result in an API error
     try {
       await reaction.fetch();
     } catch (error) {
       console.error("Something went wrong when fetching the message:", error);
-      // Return as `reaction.message.author` may be undefined/null
       return;
     }
   }
 
-  // Now the message has been cached and is fully available
-  // Check for the used Emoji with chosen langage
+  //Should now be usable
 
-  //initiate the default values of the translation :
-  targetLangage = "fr";
-  inputLanguage = "en";
-  flag = ":flag_fr:";
   switch (reaction.emoji.name) {
     case "🇫🇷":
       console.log("Flag Francais détecté");
       targetLangage = "fr";
       inputLanguage = "en";
       flag = ":flag_fr:";
+
+      starttranslation = true;
       break;
     case "🇬🇧":
       console.log("Flag Anglais détecté");
@@ -107,17 +103,26 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
       inputLanguage = "fr";
       flag = ":flag_gb:";
 
+      starttranslation = true;
       break;
   }
-  //Get the translation using the defined parameters
-  translatedText = await functions.translater(
-    reactedMessageContent,
-    targetLangage,
-    inputLanguage
-  );
+  console.log(starttranslation);
+  if (starttranslation == true) {
+    //Get the translation using the defined parameters
+    translatedText = await functions.translater(
+      reactedMessageContent,
+      targetLangage,
+      inputLanguage
+    );
 
-  //Reply to the original message with the translation
-  reactedMessage.reply(flag + " : " + translatedText);
+    //Reply to the original message with the translation
+    reactedMessage.reply(flag + " : " + translatedText);
+  }
+});
+
+//Handle the removal of the reaction
+client.on(Events.MessageReactionRemove, async (reaction, user) => {
+  console.log("MessageReactionRemove");
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -134,27 +139,6 @@ client.on("interactionCreate", async (interaction) => {
       );
     }
   }
-  // IN case of the presence of buttons  -----reusable code ----
-  /*else if (interaction.isButton()) {
-    const { customId } = interaction;
-    const messageReply = messageReplyMap.get(interaction.message.id);
-
-    if (customId === "confirm") {
-      console.log("confirm button pressed");
-      const translatedText = await functions.translater(saidMessage.content);
-
-      // Remove the buttons from the original message's reply
-      await messageReply.edit({
-        content: translatedText,
-        components: [],
-      });
-      saidMessage = "";
-    } else if (customId === "cancel") {
-      console.log("Cancelled Translation");
-      await messageReply.delete();
-      saidMessage = "";
-    }
-  }*/
 });
 
 client.login(process.env.TOKEN);
