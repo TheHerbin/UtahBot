@@ -87,7 +87,6 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
   }
 
   //Should now be usable
-
   switch (reaction.emoji.name) {
     case "🇫🇷":
       console.log("Flag Francais détecté");
@@ -114,15 +113,20 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
       targetLangage,
       inputLanguage
     );
-
+    functions.persist(fs, reactedMessage.id, "ids.txt");
     //Reply to the original message with the translation
     reactedMessage.reply(flag + " : " + translatedText);
+    setTimeout(function () {
+      functions.unpersistFirst(fs, "ids.txt");
+    }, 900000);
   }
 });
 
 //Handle the removal of the reaction
 client.on(Events.MessageReactionRemove, async (reaction, user) => {
   console.log("MessageReactionRemove");
+  //avant de procéder à la rédaction, je crois créer un système de DB qui sauvegarde les ID des messages déjà traduis temporairement et les efface de sa DB après 1 heure.
+  console.log(reaction);
 });
 
 client.on("interactionCreate", async (interaction) => {
